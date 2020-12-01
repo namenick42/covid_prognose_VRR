@@ -13,6 +13,10 @@
 # export(infectie_data_raw, "data/COVID-19_aantallen_gemeente_per_dag.csv")
 
 
+# borging laatste versie --------------------------------------------------
+# let op, eigen wijzigen gaan verloren. 
+system("git pull --force")
+
 # packages ----------------------------------------------------------------
 
 library(tidyverse)
@@ -22,6 +26,7 @@ library(rio)
 library(tidyquant)
 library(zoo)
 library(janitor)
+
 
 
 # data laden --------------------------------------------------------------
