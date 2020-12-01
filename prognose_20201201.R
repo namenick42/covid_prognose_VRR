@@ -2,13 +2,15 @@
 
 # opzet -------------------------------------------------------------------
 
-# git clone
-# mapje data?
-# mapje resultaat
-
-# packages installeren
-
-
+# Rstudio > new project > version controle > https://github.com/namenick42/covid_prognose_VRR/
+# tab files:
+# New folder "data"
+# New folder "resultaat"
+# tab packages
+# packages hieronder installeren (alles met library)
+# Eerste keer RIVM handmatig doen.
+# infectie_data_raw <- import("https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_per_dag.csv") 
+# export(infectie_data_raw, "data/COVID-19_aantallen_gemeente_per_dag.csv")
 
 
 # packages ----------------------------------------------------------------
@@ -26,7 +28,7 @@ library(janitor)
 
 # infecties RIVM
 
-if(file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET")) {
+if(file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET") & Sys.time() > paste0(Sys.Date(), " 14:30:00 CET")) {
   infectie_data_raw <- import("https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_per_dag.csv") 
   export(infectie_data_raw, "data/COVID-19_aantallen_gemeente_per_dag.csv")
 } else {
@@ -105,10 +107,10 @@ aantal_sim <- 10
 
 dagen_projecteren <- 50      # aantal dagen voorbij vandaag
 
-r = 1.02                    # R0 waarde voor projectie (RIVM pres 18-11)  0.97 lokaal (Yvonne)
+r = 1.02                    # R0 waarde voor projectie.
 r_dag <- 1-(1-r)/7            # RO per dag maken, r geldt voor incubatie van 7 dagen
 
-sceanrio = paste0("R", r)
+sceanrio = paste0("R", r)     # de naam komt van de R. Bij andere variatie moet er een andere naam gekozen worden. 
 
 factor_pop_ha_centa = 0.0016  # prop uit infectueus RIVM naar corona
 factor_pop_zh = 0.036        # prop uit infectueus RIVM naar ziekenhuis
@@ -117,8 +119,8 @@ factor_zh_centra = 0.2        # prop uit ziekenhuis naar corona
 vertraging_opname_ha <- 0     # dagen vertraging tussen infectueus RIVM en HA/centra
 vertraging_opname_zk <- 5    # dagen vertraging tussen infectueus RIVM en ZA
 
-gem_ligduur_zh <- 9.6           #dagen
-gem_ligduur_centra <- 17      # dagen
+gem_ligduur_zh <- 9.6           #dagen ligduur ziekenhuis als black box.
+gem_ligduur_centra <- 17      # dagen ligduur coronacentra op basis van zorghotel.
 
 
 
@@ -244,7 +246,7 @@ for(i in 1:aantal_sim) {
 # read, bind  -----------------------------------------------------------
 
 verzameling_resultaten <- 
-  list.files("resultaat/", full.names = T) %>%
+  list.files("resultaat/", full.names = T, pattern = make_clean_names(as.character(Sys.Date())) ) %>% # filter alleen vandaag
   map_dfr(readRDS) %>% 
   mutate(id = paste0(vr_code, sceanrio, run))
 
