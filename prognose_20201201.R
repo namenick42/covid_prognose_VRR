@@ -3,9 +3,6 @@
 # opzet -------------------------------------------------------------------
 
 # Rstudio > new project > version controle > https://github.com/namenick42/covid_prognose_VRR/
-# tab files:
-# New folder "data"
-# New folder "resultaat"
 # tab packages
 # packages hieronder installeren (alles met library)
 # Eerste keer RIVM handmatig doen.
@@ -33,7 +30,9 @@ library(janitor)
 
 # infecties RIVM
 
-if(file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET") & Sys.time() > paste0(Sys.Date(), " 14:30:00 CET")) {
+if(is.na(file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime) |
+   (file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET") & Sys.time() > paste0(Sys.Date(), " 14:30:00 CET"))) 
+{
   infectie_data_raw <- import("https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_per_dag.csv") 
   export(infectie_data_raw, "data/COVID-19_aantallen_gemeente_per_dag.csv")
 } else {
