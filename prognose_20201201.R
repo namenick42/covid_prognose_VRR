@@ -31,8 +31,7 @@ library(janitor)
 # infecties RIVM
 
 if(is.na(file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime) |
-   (file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET") & Sys.time() > paste0(Sys.Date(), " 14:30:00 CET"))) 
-{
+   (file.info("data/COVID-19_aantallen_gemeente_per_dag.csv")$mtime < paste0(Sys.Date(), " 14:30:00 CET") & Sys.time() > paste0(Sys.Date(), " 14:30:00 CET"))) {
   infectie_data_raw <- import("https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_per_dag.csv") 
   export(infectie_data_raw, "data/COVID-19_aantallen_gemeente_per_dag.csv")
 } else {
